@@ -12,7 +12,7 @@
 git init
 git add .
 git commit -m "Initial commit"
-git remote add origin https://github.com/myserverbanki-byte/botdazzle.git
+git remote add origin <your-repository-url>
 git push -u origin main
 ```
 
@@ -43,8 +43,8 @@ vercel --prod
 
 В вашем проекте уже настроено:
 
-- ✅ `vercel.json` - конфигурация для Vercel
-- ✅ `api/index.js` - serverless function для SSR
+- ✅ `vercel.json` - конфигурация для Vercel с правильной маршрутизацией
+- ✅ `api/index.js` - serverless function для SSR с обработкой ошибок
 - ✅ Build команды в `package.json`
 
 ## Переменные окружения
@@ -65,11 +65,43 @@ vercel --prod
 
 ## Проблемы?
 
-Если что-то не работает:
+### FUNCTION_INVOCATION_FAILED (500 ошибка)
 
-1. Проверьте логи сборки в Vercel Dashboard
-2. Убедитесь, что все зависимости установлены
-3. Проверьте, что Node.js версия совместима (рекомендуется 18.x или выше)
+Если вы видите ошибку "This Serverless Function has crashed":
+
+1. **Проверьте Runtime Logs** в Vercel Dashboard:
+   - Перейдите в проект → Functions
+   - Посмотрите детальные логи ошибок
+
+2. **Убедитесь в правильности зависимостей**:
+   - Все необходимые пакеты должны быть в `dependencies` (не в `devDependencies`)
+   - Особенно важно для `@react-router/node` и `@react-router/serve`
+
+3. **Проверьте сборку**:
+   - Посмотрите Build Logs в Vercel
+   - Убедитесь, что папка `build/server` создана
+   - Проверьте, что файл `build/server/index.js` существует
+
+4. **Очистите кеш**:
+   - В Vercel Dashboard: Deployments → ... → Redeploy → Clear cache
+
+### Другие проблемы
+
+1. **Ошибка при сборке**:
+   - Проверьте логи сборки в Vercel Dashboard
+   - Убедитесь, что все зависимости установлены
+   - Проверьте, что Node.js версия совместима (рекомендуется 18.x или выше)
+   - Запустите `npm run build` локально для проверки
+
+2. **404 на страницах**:
+   - Убедитесь, что `vercel.json` настроен правильно
+   - Проверьте маршрутизацию в `app/routes.ts`
+   - Проверьте, что статические файлы попадают в `build/client`
+
+3. **Медленная загрузка**:
+   - Проверьте регион деплоя (Settings → General)
+   - Оптимизируйте размер бандла
+   - Используйте lazy loading для компонентов
 
 ## Локальная проверка
 
@@ -84,3 +116,9 @@ npm start
 ```
 
 Откройте `http://localhost:3000` для проверки.
+
+## Полезные ссылки
+
+- [Vercel Documentation](https://vercel.com/docs)
+- [React Router v7 Documentation](https://reactrouter.com/)
+- [Vercel Serverless Functions](https://vercel.com/docs/functions)
