@@ -1,0 +1,135 @@
+/* Главная страница каталога */
+
+.page {
+  min-height: 100vh;
+  background: var(--color-neutral-1);
+}
+
+.header {
+  background: var(--color-accent-3);
+  border-bottom: 1px solid var(--color-accent-6);
+  padding: var(--space-5) var(--space-4);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--color-accent-12);
+  margin: 0 0 var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.subtitle {
+  font-size: 0.9375rem;
+  color: var(--color-neutral-11);
+  margin: 0;
+}
+
+.filters {
+  background: var(--color-neutral-2);
+  border-bottom: 1px solid var(--color-neutral-6);
+  padding: var(--space-3) var(--space-4);
+  overflow-x: auto;
+  position: sticky;
+  top: 88px;
+  z-index: 99;
+}
+
+.filterButtons {
+  display: flex;
+  gap: var(--space-2);
+  max-width: 1200px;
+  margin: 0 auto;
+  min-width: max-content;
+}
+
+.filterButton {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-neutral-7);
+  background: var(--color-neutral-1);
+  color: var(--color-neutral-11);
+  border-radius: var(--radius-2);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  white-space: nowrap;
+}
+
+.filterButton:hover {
+  border-color: var(--color-accent-8);
+  background: var(--color-accent-2);
+  color: var(--color-accent-11);
+}
+
+.filterButton.active {
+  background: var(--color-accent-9);
+  color: var(--color-accent-contrast);
+  border-color: var(--color-accent-9);
+}
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-5);
+}
+
+.emptyState {
+  text-align: center;
+  padding: var(--space-8) var(--space-4);
+  color: var(--color-neutral-11);
+}
+
+.emptyStateIcon {
+  font-size: 4rem;
+  margin-bottom: var(--space-4);
+}
+
+.emptyStateTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-neutral-12);
+  margin: 0 0 var(--space-2);
+}
+
+.emptyStateText {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.loading {
+  text-align: center;
+  padding: var(--space-8);
+  color: var(--color-neutral-11);
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .filters {
+    top: 84px;
+  }
+}
