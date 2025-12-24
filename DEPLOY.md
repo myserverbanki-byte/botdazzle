@@ -1,58 +1,44 @@
 # Деплой на Vercel
 
-Ваше приложение готово к деплою на Vercel!
+Это приложение построено на **React Router v7** в режиме **SPA** и готово к деплою на Vercel.
 
-## Шаги для деплоя:
+## Быстрый старт
 
-### 1. Подготовка репозитория
+### Вариант 1: Через Vercel Dashboard (рекомендуется)
 
-Убедитесь, что ваш код загружен в Git-репозиторий (GitHub, GitLab или Bitbucket):
-
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin <your-repository-url>
-git push -u origin main
-```
-
-### 2. Деплой через Vercel Dashboard
-
-1. Перейдите на [vercel.com](https://vercel.com)
-2. Нажмите "New Project"
-3. Импортируйте ваш Git-репозиторий
-4. Vercel автоматически определит настройки из `vercel.json`
+1. Загрузите код на GitHub/GitLab/Bitbucket
+2. Зайдите на [vercel.com](https://vercel.com)
+3. Нажмите "New Project"
+4. Выберите ваш репозиторий
 5. Нажмите "Deploy"
 
-### 3. Деплой через Vercel CLI
+Vercel автоматически определит настройки из `vercel.json`.
 
-Альтернативный способ - использовать CLI:
+### Вариант 2: Через Vercel CLI
 
 ```bash
 # Установите Vercel CLI
 npm i -g vercel
 
 # Запустите деплой
-vercel
-
-# Или сразу на продакшен
 vercel --prod
 ```
 
-## Настройки проекта
+## Что происходит при деплое?
 
-В вашем проекте уже настроено:
+1. **Build** - Vercel выполнит `npm run build`, который создаст:
+   - `build/client/` - статические файлы (HTML, CSS, JS) для SPA
 
-- ✅ `vercel.json` - конфигурация для Vercel с правильной маршрутизацией
-- ✅ `api/index.js` - serverless function для SSR с обработкой ошибок
-- ✅ Build команды в `package.json`
+2. **Маршрутизация** - Vercel настроит роутинг:
+   - Статические файлы отдаются напрямую
+   - Все остальные запросы перенаправляются на `index.html` для client-side роутинга
 
 ## Переменные окружения
 
 Если у вас есть секретные переменные (API ключи и т.д.), добавьте их в настройках проекта на Vercel:
 
 1. Откройте проект на Vercel
-2. Перейдите в Settings → Environment Variables
+2. Перейдите в **Settings → Environment Variables**
 3. Добавьте необходимые переменные
 
 ## После деплоя
@@ -63,62 +49,38 @@ vercel --prod
 - Автоматические деплои при каждом push в main ветку
 - Preview деплои для pull requests
 
-## Проблемы?
+## Устранение проблем
 
-### FUNCTION_INVOCATION_FAILED (500 ошибка)
+### Проверка локальной сборки
 
-Если вы видите ошибку "This Serverless Function has crashed":
-
-1. **Проверьте Runtime Logs** в Vercel Dashboard:
-   - Перейдите в проект → Functions
-   - Посмотрите детальные логи ошибок
-
-2. **Убедитесь в правильности зависимостей**:
-   - Все необходимые пакеты должны быть в `dependencies` (не в `devDependencies`)
-   - Особенно важно для `@react-router/node` и `@react-router/serve`
-
-3. **Проверьте сборку**:
-   - Посмотрите Build Logs в Vercel
-   - Убедитесь, что папка `build/server` создана
-   - Проверьте, что файл `build/server/index.js` существует
-
-4. **Очистите кеш**:
-   - В Vercel Dashboard: Deployments → ... → Redeploy → Clear cache
-
-### Другие проблемы
-
-1. **Ошибка при сборке**:
-   - Проверьте логи сборки в Vercel Dashboard
-   - Убедитесь, что все зависимости установлены
-   - Проверьте, что Node.js версия совместима (рекомендуется 18.x или выше)
-   - Запустите `npm run build` локально для проверки
-
-2. **404 на страницах**:
-   - Убедитесь, что `vercel.json` настроен правильно
-   - Проверьте маршрутизацию в `app/routes.ts`
-   - Проверьте, что статические файлы попадают в `build/client`
-
-3. **Медленная загрузка**:
-   - Проверьте регион деплоя (Settings → General)
-   - Оптимизируйте размер бандла
-   - Используйте lazy loading для компонентов
-
-## Локальная проверка
-
-Перед деплоем можно проверить production build локально:
+Перед деплоем убедитесь, что сборка работает локально:
 
 ```bash
-# Сборка
 npm run build
-
-# Запуск production сервера
-npm start
 ```
 
-Откройте `http://localhost:3000` для проверки.
+### Очистка кэша при redeploy
+
+1. Зайдите в проект на Vercel
+2. Откройте **Deployments**
+3. Нажмите на три точки (...) рядом с последним деплоем
+4. Выберите **Redeploy**
+5. ⚠️ **Обязательно отметьте "Clear cache"**
+
+### Проверка логов
+
+1. В проекте на Vercel откройте **Deployments**
+2. Кликните на последний деплой
+3. Просмотрите **Build Logs** для выявления ошибок сборки
+
+### 404 на страницах
+
+Если вы видите 404 на других страницах (кроме главной):
+
+- Убедитесь, что `vercel.json` настроен правильно (уже настроен)
+- Проверьте маршрутизацию в `app/routes.ts`
 
 ## Полезные ссылки
 
 - [Vercel Documentation](https://vercel.com/docs)
 - [React Router v7 Documentation](https://reactrouter.com/)
-- [Vercel Serverless Functions](https://vercel.com/docs/functions)
