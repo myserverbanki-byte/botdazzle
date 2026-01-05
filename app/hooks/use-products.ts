@@ -1,0 +1,155 @@
+/**
+ * Хук для работы с продуктами
+ * Управляет состоянием продуктов и операциями CRUD через Supabase
+ */
+
+import { useState, useEffect } from 'react';
+import type { Product, ProductCategory } from '~/data/types';
+import { initialProducts } from '~/data/initial-products';
+import { supabase } from '~/utils/supabase';
+
+export function useProducts() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Загрузка продуктов из Supabase при монтировании
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  const loadProducts = async () => {
+    try {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('createdAt', { ascending: false });
+
+      if (error) throw error;
+
+      if (!data || data.length === 0) {
+        // Если данных нет, инициализируем начальными данными
+        await initializeProducts();
+      } else {
+        setProducts(data as Product[]);
+      }
+    } catch (error) {
+      console.error('Ошибка загрузки продуктов:', error);
+      setProducts([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const initializeProducts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .insert(initialProducts as any[])
+        .select();
+
+      if (error) throw error;
+      if (data) setProducts(data as Product[]);
+    } catch (error) {
+      console.error('Ошибка инициализации продуктов:', error);
+    }
+  };
+
+  // Получить все продукты
+  const getAllProducts = () => products;
+
+  // Получить продукты по категории
+  const getProductsByCategory = (category: ProductCategory) => {
+    return products.filter(p => p.category === category);
+  };
+
+  // Получить топовые продукты
+  const getFeaturedProducts = () => {
+    return products.filter(p => p.isFeatured);
+  };
+
+  // Получить продукт по ID
+  const getProductById = (id: string) => {
+    return products.find(p => p.id === id);
+  };
+
+  // Добавить продукт
+  const addProduct = async (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
+    try {
+      const newProduct = {
+        ...product,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      const { data, error } = await supabase
+        .from('products')
+        .insert([newProduct as any])
+        .select()
+        .single();
+
+      if (error) throw error;
+      if (data) {
+        setProducts(prev => [data as Product, ...prev]);
+        return data as Product;
+      }
+    } catch (error) {
+      console.error('Ошибка добавления продукта:', error);
+      throw error;
+    }
+  };
+
+  // Обновить продукт
+  const updateProduct = async (id: string, updates: Partial<Product>) => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .update({ ...updates as any, updatedAt: new Date().toISOString() })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      if (data) {
+        setProducts(prev => prev.map(p => (p.id === id ? data as Product : p)));
+      }
+    } catch (error) {
+      console.error('Ошибка обновления продукта:', error);
+      throw error;
+    }
+  };
+
+  // Удалить продукт
+  const deleteProduct = async (id: string) => {
+    try {
+      const { error } = await supabase.from('products').delete().eq('id', id);
+
+      if (error) throw error;
+      setProducts(prev => prev.filter(p => p.id !== id));
+    } catch (error) {
+      console.error('Ошибка удаления продукта:', error);
+      throw error;
+    }
+  };
+
+  // Переключить статус "в топе"
+  const toggleFeatured = async (id: string) => {
+    const product = products.find(p => p.id === id);
+    if (product) {
+      await updateProduct(id, { isFeatured: !product.isFeatured });
+    }
+  };
+
+  return {
+    products,
+    isLoading,
+    getAllProducts,
+    getProductsByCategory,
+    getFeaturedProducts,
+    getProductById,
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    toggleFeatured,
+  };
+}

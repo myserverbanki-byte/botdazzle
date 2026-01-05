@@ -1,0 +1,223 @@
+/* Форма создания/редактирования продукта */
+
+.page {
+  min-height: 100vh;
+  background: var(--color-neutral-2);
+}
+
+.header {
+  background: var(--color-neutral-1);
+  border-bottom: 1px solid var(--color-neutral-6);
+  padding: var(--space-4);
+}
+
+.headerContent {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.backButton {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-neutral-7);
+  background: var(--color-neutral-1);
+  color: var(--color-neutral-11);
+  border-radius: var(--radius-2);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.backButton:hover {
+  background: var(--color-neutral-3);
+  border-color: var(--color-neutral-8);
+}
+
+.main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+}
+
+.card {
+  background: var(--color-neutral-1);
+  border: 1px solid var(--color-neutral-6);
+  border-radius: var(--radius-3);
+  padding: var(--space-6);
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--color-neutral-12);
+  margin: 0 0 var(--space-5);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sectionTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-neutral-12);
+  margin: 0;
+  padding-bottom: var(--space-2);
+  border-bottom: 2px solid var(--color-neutral-6);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-neutral-11);
+}
+
+.required {
+  color: var(--color-error-11);
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: var(--space-3);
+  border: 1px solid var(--color-neutral-7);
+  border-radius: var(--radius-2);
+  font-size: 1rem;
+  background: var(--color-neutral-1);
+  color: var(--color-neutral-12);
+  transition: border-color 0.2s var(--ease-out);
+  font-family: inherit;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-accent-8);
+}
+
+.textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+}
+
+.checkboxInput {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.checkboxLabel {
+  font-size: 0.9375rem;
+  color: var(--color-neutral-12);
+  cursor: pointer;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.error {
+  background: var(--color-error-2);
+  border: 1px solid var(--color-error-7);
+  color: var(--color-error-11);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-2);
+  font-size: 0.875rem;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-neutral-6);
+}
+
+.submitButton {
+  flex: 1;
+  padding: var(--space-4);
+  background: var(--color-accent-9);
+  color: var(--color-accent-contrast);
+  border: none;
+  border-radius: var(--radius-2);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+}
+
+.submitButton:hover {
+  background: var(--color-accent-10);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-1);
+}
+
+.submitButton:active {
+  transform: translateY(0);
+}
+
+.cancelButton {
+  padding: var(--space-4);
+  background: var(--color-neutral-3);
+  color: var(--color-neutral-11);
+  border: 1px solid var(--color-neutral-7);
+  border-radius: var(--radius-2);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  text-decoration: none;
+  text-align: center;
+}
+
+.cancelButton:hover {
+  background: var(--color-neutral-4);
+  border-color: var(--color-neutral-8);
+}
+
+.help {
+  font-size: 0.8125rem;
+  color: var(--color-neutral-10);
+  margin-top: var(--space-1);
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}
