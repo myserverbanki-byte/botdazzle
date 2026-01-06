@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import type { Product, ProductCategory } from '~/data/types';
 import { initialProducts } from '~/data/initial-products';
-import { supabase } from '~/utils/supabase';
+import { supabase, isSupabaseEnabled } from '~/utils/supabase';
 
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -20,7 +20,15 @@ export function useProducts() {
   const loadProducts = async () => {
     try {
       setIsLoading(true);
-      const { data, error } = await supabase
+
+      // Если Supabase не настроен, используем локальные данные
+      if (!isSupabaseEnabled) {
+        setProducts(initialProducts);
+        setIsLoading(false);
+        return;
+      }
+
+      const { data, error } = await supabase!
         .from('products')
         .select('*')
         .order('createdAt', { ascending: false });
@@ -35,7 +43,7 @@ export function useProducts() {
       }
     } catch (error) {
       console.error('Ошибка загрузки продуктов:', error);
-      setProducts([]);
+      setProducts(initialProducts);
     } finally {
       setIsLoading(false);
     }
@@ -43,7 +51,12 @@ export function useProducts() {
 
   const initializeProducts = async () => {
     try {
-      const { data, error } = await supabase
+      if (!isSupabaseEnabled) {
+        setProducts(initialProducts);
+        return;
+      }
+
+      const { data, error } = await supabase!
         .from('products')
         .insert(initialProducts as any[])
         .select();
@@ -52,6 +65,7 @@ export function useProducts() {
       if (data) setProducts(data as Product[]);
     } catch (error) {
       console.error('Ошибка инициализации продуктов:', error);
+      setProducts(initialProducts);
     }
   };
 
@@ -82,7 +96,17 @@ export function useProducts() {
         updatedAt: new Date().toISOString(),
       };
 
-      const { data, error } = await supabase
+      // Если Supabase не настроен, работаем локально
+      if (!isSupabaseEnabled) {
+        const localProduct = {
+          ...newProduct,
+          id: Date.now().toString(),
+        } as Product;
+        setProducts(prev => [localProduct, ...prev]);
+        return localProduct;
+      }
+
+      const { data, error } = await supabase!
         .from('products')
         .insert([newProduct as any])
         .select()
@@ -102,7 +126,15 @@ export function useProducts() {
   // Обновить продукт
   const updateProduct = async (id: string, updates: Partial<Product>) => {
     try {
-      const { data, error } = await supabase
+      // Если Supabase не настроен, работаем локально
+      if (!isSupabaseEnabled) {
+        setProducts(prev => prev.map(p =>
+          p.id === id ? { ...p, ...updates, updatedAt: new Date().toISOString() } as Product : p
+        ));
+        return;
+      }
+
+      const { data, error } = await supabase!
         .from('products')
         .update({ ...updates as any, updatedAt: new Date().toISOString() })
         .eq('id', id)
@@ -122,7 +154,13 @@ export function useProducts() {
   // Удалить продукт
   const deleteProduct = async (id: string) => {
     try {
-      const { error } = await supabase.from('products').delete().eq('id', id);
+      // Если Supabase не настроен, работаем локально
+      if (!isSupabaseEnabled) {
+        setProducts((prev) => prev.filter((p) => p.id !== id));
+        return;
+      }
+
+      const { error } = await supabase!.from('products').delete().eq('id', id);
 
       if (error) throw error;
       setProducts(prev => prev.filter(p => p.id !== id));
