@@ -9,7 +9,7 @@ import { useAuth } from '~/hooks/use-auth';
 import { useProducts } from '~/hooks/use-products';
 import styles from './admin.dashboard.module.css';
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [
     { title: 'Админ-панель - FinCatalog' },
     { name: 'description', content: 'Управление финансовыми продуктами' },
@@ -175,9 +175,8 @@ export default function AdminDashboard() {
                     </td>
                     <td>
                       <span
-                        className={`${styles.badge} ${
-                          categoryBadgeClass[product.category]
-                        }`}
+                        className={`${styles.badge} ${categoryBadgeClass[product.category]
+                          }`}
                       >
                         {categoryLabels[product.category]}
                       </span>
@@ -201,7 +200,7 @@ export default function AdminDashboard() {
                     <td>
                       <div className={styles.actions}>
                         <Link
-                          to={`/admin/product/${product.id}/edit`}
+                          to={`/admin/product/edit/${product.id}`}
                           className={styles.actionButton}
                         >
                           ✏️ Изменить

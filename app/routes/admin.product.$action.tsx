@@ -10,7 +10,7 @@ import { useProducts } from '~/hooks/use-products';
 import type { Product, ProductCategory } from '~/data/types';
 import styles from './admin.product.$action.module.css';
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   // Meta определяется динамически внутри компонента
   return [
     {
@@ -25,10 +25,10 @@ export default function AdminProductForm() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const { getProductById, addProduct, updateProduct } = useProducts();
 
-  // Определяем режим: если mode === 'edit', то это редактирование
-  const isEdit = params.mode === 'edit';
+  // Определяем режим по action параметру
+  const isEdit = params.action === 'edit';
   // ID продукта (при редактировании)
-  const productId = isEdit ? params.id : null;
+  const productId = params.id || null;
 
   // Проверка аутентификации
   useEffect(() => {

@@ -8,22 +8,45 @@ import type { Product, ProductCategory } from '~/data/types';
 import { initialProducts } from '~/data/initial-products';
 import { supabase, isSupabaseEnabled } from '~/utils/supabase';
 
+const LOCAL_STORAGE_KEY = 'fincatalog_products';
+
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Загрузка продуктов из Supabase при монтировании
+  // Загрузка продуктов при монтировании
   useEffect(() => {
     loadProducts();
   }, []);
+
+  // Сохранение в localStorage при изменении продуктов (если Supabase не доступен)
+  useEffect(() => {
+    if (!isSupabaseEnabled && products.length > 0) {
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(products));
+      } catch (e) {
+        console.error('Ошибка сохранения в localStorage:', e);
+      }
+    }
+  }, [products]);
 
   const loadProducts = async () => {
     try {
       setIsLoading(true);
 
-      // Если Supabase не настроен, используем локальные данные
+      // Если Supabase не настроен, используем localStorage
       if (!isSupabaseEnabled) {
-        setProducts(initialProducts);
+        try {
+          const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+          if (stored) {
+            setProducts(JSON.parse(stored));
+          } else {
+            setProducts(initialProducts);
+          }
+        } catch (e) {
+          console.error('Ошибка загрузки из localStorage:', e);
+          setProducts(initialProducts);
+        }
         setIsLoading(false);
         return;
       }

@@ -8,5 +8,5 @@ export default [
   // Админ-панель
   route('admin/login', './routes/admin.login.tsx'),
   route('admin/dashboard', './routes/admin.dashboard.tsx'),
-  route('admin/product/:id?/:mode?', './routes/admin.product.$action.tsx'),
+  route('admin/product/:action/:id?', './routes/admin.product.$action.tsx'),
 ] satisfies RouteConfig;
