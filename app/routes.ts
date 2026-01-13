@@ -9,4 +9,7 @@ export default [
   route('admin/login', './routes/admin.login.tsx'),
   route('admin/dashboard', './routes/admin.dashboard.tsx'),
   route('admin/product/:action/:id?', './routes/admin.product.$action.tsx'),
+
+  // Отладка
+  route('debug', './routes/debug.tsx'),
 ] satisfies RouteConfig;
